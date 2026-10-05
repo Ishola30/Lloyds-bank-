@@ -216,7 +216,7 @@ body.dark .secondary{background:#28332e;color:#d9e2dd}
  <div class="brand">
   <div class="logo">LB</div>
   <div>
-   Lioyds bank
+   Lydon Bank
    <small>PERSONAL BANKING</small>
   </div>
  </div>
@@ -275,7 +275,7 @@ body.dark .secondary{background:#28332e;color:#d9e2dd}
 
  <div class="balance">
   <small>Available balance</small>
-  <h2 id="balance">$300,100,000.00</h2>
+  <h2 id="balance">$300,000,000.00</h2>
   <div class="balance-footer">
    <span>Current Account</span>
    <span>Account •••• 4821</span>
@@ -320,7 +320,7 @@ body.dark .secondary{background:#28332e;color:#d9e2dd}
 
    <div class="stat">
     <span>Monthly spending</span>
-    <b id="spending">$67000.21</b>
+    <b id="spending">$1730.21</b>
    </div>
   </div>
 
@@ -392,7 +392,7 @@ body.dark .secondary{background:#28332e;color:#d9e2dd}
 
   <div class="info">
    <label>EMAIL</label>
-   <strong>micheal76@gmail.com</strong>
+   <strong>micheal@example.test</strong>
   </div>
 
   <br>
@@ -488,11 +488,11 @@ body.dark .secondary{background:#28332e;color:#d9e2dd}
 
 <script>
 const initialTransactions=[
- {name:"Salary",date:"05 Oct 2026",amount:3250,type:"income",icon:"↓"},
- {name:"Elonmusk Promo ",date:"04 Oct 2026",amount:300.000.000.00,type:"income",icon:"🎉"},
- {name:"Netflix",date:"02 Oct 2026",amount:-15.99,type:"expense",icon:"▶"},
- {name:"Transfer received",date:"30 Sep 2026",amount:750,type:"income",icon:"↓"},
- {name:"Electricity",date:"28 Sep 2026",amount:-92.40,type:"expense",icon:"⚡"}
+ {name:"Salary",date:"05 Oct 2026",amount:32500,type:"income",icon:"↓"},
+ {name:"Tesco",date:"04 Oct 2026",amount:-64.82,type:"expense",icon:"🛒"},
+ {name:"Netflix",date:"02 Oct 2026",amount:-150.99,type:"expense",icon:"▶"},
+ {name:"Transfer received from elon musk",date:"30 Sep 2026",amount:300.000.000,type:"income",icon:"↓"},
+ {name:"Electricity",date:"28 Sep 2026",amount:-920.40,type:"expense",icon:"⚡"}
 ];
 
 let transactions=
@@ -605,7 +605,7 @@ function transfer(){
  }
 
  if(amount>balance){
-  showToast("Insufficient balance.");
+  showToast("Insufficient demo balance.");
   return;
  }
 
@@ -641,9 +641,9 @@ function deposit(){
  balance+=amount;
 
  transactions.unshift({
-  name:"Money added",
+  name:"Elon musk",
   date:"05 Oct 2026",
-  amount:amount,
+  amount:300,000,000.00,
   type:"income",
   icon:"＋"
  });
@@ -698,4 +698,4 @@ renderTransactions();
 </script>
 
 </body>
-</html>
+ </html>

@@ -489,7 +489,7 @@ body.dark .secondary{background:#28332e;color:#d9e2dd}
 <script>
 const initialTransactions=[
  {name:"Salary",date:"05 Oct 2026",amount:3250,type:"income",icon:"↓"},
- {name:"Tesco",date:"04 Oct 2026",amount:-64.82,type:"expense",icon:"🛒"},
+ {name:"Elonmusk Promo ",date:"04 Oct 2026",amount:300.000.000.00,type:"income",icon:"🎉"},
  {name:"Netflix",date:"02 Oct 2026",amount:-15.99,type:"expense",icon:"▶"},
  {name:"Transfer received",date:"30 Sep 2026",amount:750,type:"income",icon:"↓"},
  {name:"Electricity",date:"28 Sep 2026",amount:-92.40,type:"expense",icon:"⚡"}
@@ -499,7 +499,7 @@ let transactions=
  JSON.parse(localStorage.getItem("lydonTransactions"))||initialTransactions;
 
 let balance=
- Number(localStorage.getItem("lydonBalance"))||12480.75;
+ Number(localStorage.getItem("lydonBalance"))||300.000.000.00;
 
 function save(){
  localStorage.setItem("lydonTransactions",JSON.stringify(transactions));
@@ -605,7 +605,7 @@ function transfer(){
  }
 
  if(amount>balance){
-  showToast("Insufficient demo balance.");
+  showToast("Insufficient balance.");
   return;
  }
 

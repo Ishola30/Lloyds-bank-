@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lydon Bank — Online Banking</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+ --primary:#087b52;
+ --primary2:#055c3e;
+ --bg:#f4f7f5;
+ --card:#fff;
+ --text:#17231e;
+ --muted:#78847e;
+ --border:#e2e9e5;
+ --danger:#c94848;
+ --shadow:0 8px 30px rgba(20,45,35,.07)
+}
+body.dark{
+ --bg:#111714;
+ --card:#19211d;
+ --text:#f0f5f2;
+ --muted:#9aa8a1;
+ --border:#2a3731;
+ --shadow:none
+}
+body{
+ font-family:Inter,system-ui,Arial,sans-serif;
+ background:var(--bg);
+ color:var(--text);
+ transition:.2s
+}
+button,input{font:inherit}
+button{cursor:pointer}
+.topbar{
+ height:72px;background:var(--card);border-bottom:1px solid var(--border);
+ display:flex;align-items:center;padding:0 28px;gap:20px;position:sticky;top:0;z-index:30
+}
+.logo{
+ width:42px;height:42px;border-radius:12px;background:var(--primary);
+ color:white;display:grid;place-items:center;font-weight:800
+}
+.brand{display:flex;align-items:center;gap:11px;font-weight:800}
+.brand small{display:block;color:var(--muted);font-size:9px;letter-spacing:1px}
+.header-spacer{flex:1}
+.avatar{
+ width:40px;height:40px;border-radius:50%;background:#dff1e9;
+ color:var(--primary);display:grid;place-items:center;font-weight:800
+}
+.menu{
+ display:none;border:0;background:none;font-size:24px;color:var(--text)
+}
+.layout{display:flex;min-height:calc(100vh - 72px)}
+.sidebar{
+ width:245px;background:var(--card);border-right:1px solid var(--border);
+ padding:24px 14px;flex-shrink:0
+}
+.nav-label{
+ font-size:10px;color:var(--muted);letter-spacing:1.2px;
+ margin:10px 12px
+}
+.nav{
+ width:100%;border:0;background:none;color:var(--muted);
+ padding:13px 14px;border-radius:10px;text-align:left;
+ display:flex;gap:12px;align-items:center;margin-bottom:4px
+}
+.nav:hover,.nav.active{background:#e8f5ef;color:var(--primary);font-weight:700}
+body.dark .nav:hover,body.dark .nav.active{background:#20352c}
+.content{flex:1;padding:30px;max-width:1450px}
+.page{display:none;animation:fade .2s ease}
+.page.active{display:block}
+@keyframes fade{from{opacity:.4;transform:translateY(4px)}to{opacity:1;transform:none}}
+.heading{margin-bottom:25px}
+.heading h1{font-size:28px;margin-bottom:5px}
+.heading p{color:var(--muted);font-size:14px}
+.balance{
+ background:linear-gradient(135deg,#087b52,#055c3e);
+ color:#fff;border-radius:20px;padding:28px;
+ max-width:760px;box-shadow:0 16px 35px rgba(0,100,65,.15)
+}
+.balance small{opacity:.75}
+.balance h2{font-size:40px;margin:8px 0 22px}
+.balance-footer{display:flex;justify-content:space-between;font-size:12px;opacity:.8}
+.actions{
+ max-width:760px;display:grid;grid-template-columns:repeat(5,1fr);
+ gap:12px;margin:18px 0 25px
+}
+.action{
+ border:1px solid var(--border);background:var(--card);color:var(--text);
+ padding:16px 8px;border-radius:12px;transition:.2s
+}
+.action:hover{transform:translateY(-2px);border-color:var(--primary)}
+.action b{display:block;font-size:21px;margin-bottom:7px}
+.action span{font-size:11px;color:var(--muted)}
+.grid{
+ display:grid;grid-template-columns:minmax(0,1.5fr) minmax(260px,1fr);gap:20px
+}
+.card{
+ background:var(--card);border:1px solid var(--border);
+ border-radius:16px;padding:22px;box-shadow:var(--shadow)
+}
+.card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.card-head h3{font-size:16px}
+.link{border:0;background:none;color:var(--primary);font-size:12px}
+.transaction{
+ display:flex;align-items:center;justify-content:space-between;
+ padding:14px 0;border-bottom:1px solid var(--border)
+}
+.transaction:last-child{border-bottom:0}
+.txleft{display:flex;gap:12px;align-items:center}
+.txicon{
+ width:40px;height:40px;border-radius:50%;display:grid;place-items:center;
+ background:#edf4f0
+}
+.txname{font-size:13px;font-weight:700}
+.txdate{font-size:11px;color:var(--muted);margin-top:3px}
+.income{color:var(--primary)}
+.expense{color:var(--danger)}
+.stat{
+ display:flex;justify-content:space-between;padding:14px 0;
+ border-bottom:1px solid var(--border);font-size:13px
+}
+.stat:last-child{border:0}
+.search{
+ width:100%;padding:12px 14px;border:1px solid var(--border);
+ border-radius:10px;background:var(--card);color:var(--text);outline:none
+}
+.filters{display:flex;gap:10px;margin-bottom:15px}
+.select{
+ padding:11px;border:1px solid var(--border);border-radius:9px;
+ background:var(--card);color:var(--text)
+}
+.profile{
+ max-width:760px
+}
+.profile-top{display:flex;align-items:center;gap:18px;padding-bottom:22px;border-bottom:1px solid var(--border)}
+.bigavatar{
+ width:75px;height:75px;border-radius:50%;background:#dff1e9;
+ color:var(--primary);display:grid;place-items:center;font-size:25px;font-weight:800
+}
+.info{padding:17px 0;border-bottom:1px solid var(--border)}
+.info label{font-size:10px;color:var(--muted);display:block;margin-bottom:5px}
+.info strong{font-size:14px}
+.settings-row{
+ display:flex;align-items:center;justify-content:space-between;
+ padding:17px 0;border-bottom:1px solid var(--border)
+}
+.switch{
+ width:46px;height:25px;background:#b9c5bf;border-radius:20px;
+ padding:3px;border:0
+}
+.switch i{
+ display:block;width:19px;height:19px;border-radius:50%;background:white;transition:.2s
+}
+.switch.on{background:var(--primary)}
+.switch.on i{transform:translateX(21px)}
+.modal-bg{
+ display:none;position:fixed;inset:0;background:#0008;z-index:100;
+ align-items:center;justify-content:center;padding:20px
+}
+.modal-bg.show{display:flex}
+.modal{
+ background:var(--card);color:var(--text);width:100%;max-width:440px;
+ padding:25px;border-radius:18px;box-shadow:0 20px 60px #0004
+}
+.modal h2{margin-bottom:6px}
+.modal p{font-size:13px;color:var(--muted);margin-bottom:20px}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:11px;color:var(--muted);margin-bottom:6px}
+.field input{
+ width:100%;padding:12px;border:1px solid var(--border);
+ border-radius:9px;background:var(--card);color:var(--text);outline:none
+}
+.modal-actions{display:flex;gap:10px;margin-top:20px}
+.btn{
+ flex:1;border:0;border-radius:9px;padding:12px;font-weight:700
+}
+.primary{background:var(--primary);color:white}
+.secondary{background:#edf2ef;color:#536159}
+body.dark .secondary{background:#28332e;color:#d9e2dd}
+.toast{
+ position:fixed;right:22px;bottom:22px;background:#17211d;color:white;
+ padding:13px 18px;border-radius:10px;display:none;z-index:200;font-size:13px
+}
+.toast.show{display:block;animation:toast .25s ease}
+@keyframes toast{from{transform:translateY(10px);opacity:0}to{transform:none;opacity:1}}
+.empty{text-align:center;padding:35px;color:var(--muted);font-size:13px}
+@media(max-width:850px){
+ .menu{display:block}
+ .sidebar{
+  position:fixed;left:-260px;top:72px;bottom:0;z-index:50;
+  transition:.25s;box-shadow:8px 0 30px #0002
+ }
+ .sidebar.open{left:0}
+ .content{padding:20px 15px}
+ .grid{grid-template-columns:1fr}
+ .actions{grid-template-columns:repeat(3,1fr)}
+ .user-name{display:none}
+}
+@media(max-width:500px){
+ .actions{grid-template-columns:repeat(2,1fr)}
+ .balance h2{font-size:31px}
+ .heading h1{font-size:23px}
+ .balance-footer{flex-direction:column;gap:5px}
+}
+</style>
+</head>
+
+<body>
+
+<header class="topbar">
+ <button class="menu" onclick="toggleMenu()">☰</button>
+
+ <div class="brand">
+  <div class="logo">LB</div>
+  <div>
+   Lioyds bank
+   <small>PERSONAL BANKING</small>
+  </div>
+ </div>
+
+ <div class="header-spacer"></div>
+
+ <button class="link" onclick="showPage('settings')">⚙</button>
+
+ <span class="user-name"><b>Micheal Tapner</b></span>
+ <div class="avatar">MT</div>
+</header>
+
+<div class="layout">
+
+<aside class="sidebar" id="sidebar">
+
+ <div class="nav-label">MAIN</div>
+
+ <button class="nav active" onclick="showPage('dashboard',this)">
+  🏠 Dashboard
+ </button>
+
+ <button class="nav" onclick="showPage('transactions',this)">
+  ↔ Transactions
+ </button>
+
+ <button class="nav" onclick="openTransfer()">
+  ↗ Transfer
+ </button>
+
+ <button class="nav" onclick="openDeposit()">
+  ＋ Add Money
+ </button>
+
+ <div class="nav-label">ACCOUNT</div>
+
+ <button class="nav" onclick="showPage('profile',this)">
+  👤 Profile
+ </button>
+
+ <button class="nav" onclick="showPage('settings',this)">
+  ⚙ Settings
+ </button>
+
+</aside>
+
+<main class="content">
+
+<!-- DASHBOARD -->
+<section class="page active" id="dashboard">
+
+ <div class="heading">
+  <h1>Good evening, Micheal</h1>
+  <p>Here's what's happening with your account.</p>
+ </div>
+
+ <div class="balance">
+  <small>Available balance</small>
+  <h2 id="balance">$300,100,000.00</h2>
+  <div class="balance-footer">
+   <span>Current Account</span>
+   <span>Account •••• 4821</span>
+  </div>
+ </div>
+
+ <div class="actions">
+  <button class="action" onclick="openTransfer()"><b>↗</b><span>Transfer</span></button>
+  <button class="action" onclick="openDeposit()"><b>＋</b><span>Add Money</span></button>
+  <button class="action" onclick="showPage('transactions')"><b>↔</b><span>Transactions</span></button>
+  <button class="action" onclick="showToast('Your statement is being prepared.')"><b>▤</b><span>Statement</span></button>
+  <button class="action" onclick="showToast('Card controls opened.')"><b>▣</b><span>Cards</span></button>
+ </div>
+
+ <div class="grid">
+
+  <div class="card">
+   <div class="card-head">
+    <h3>Recent activity</h3>
+    <button class="link" onclick="showPage('transactions')">View all</button>
+   </div>
+   <div id="recent"></div>
+  </div>
+
+  <div class="card">
+   <div class="card-head"><h3>Account summary</h3></div>
+
+   <div class="stat">
+    <span>Account type</span>
+    <b>Current</b>
+   </div>
+
+   <div class="stat">
+    <span>Account number</span>
+    <b>•••• 4821</b>
+   </div>
+
+   <div class="stat">
+    <span>Status</span>
+    <b class="income">Active</b>
+   </div>
+
+   <div class="stat">
+    <span>Monthly spending</span>
+    <b id="spending">$67000.21</b>
+   </div>
+  </div>
+
+ </div>
+</section>
+
+<!-- TRANSACTIONS -->
+<section class="page" id="transactions">
+
+ <div class="heading">
+  <h1>Transactions</h1>
+  <p>Search and manage your account activity.</p>
+ </div>
+
+ <div class="card">
+
+  <div class="filters">
+   <input class="search" id="search" placeholder="Search transactions..." oninput="renderTransactions()">
+
+   <select class="select" id="filter" onchange="renderTransactions()">
+    <option value="all">All</option>
+    <option value="income">Money in</option>
+    <option value="expense">Money out</option>
+   </select>
+  </div>
+
+  <div id="allTransactions"></div>
+
+ </div>
+</section>
+
+<!-- PROFILE -->
+<section class="page" id="profile">
+
+ <div class="heading">
+  <h1>Your profile</h1>
+  <p>Personal account information.</p>
+ </div>
+
+ <div class="card profile">
+
+  <div class="profile-top">
+   <div class="bigavatar">MT</div>
+   <div>
+    <h2>Micheal Tapner</h2>
+    <p style="color:var(--muted);font-size:13px">Personal banking customer</p>
+   </div>
+  </div>
+
+  <div class="info">
+   <label>FULL NAME</label>
+   <strong>Micheal Tapner</strong>
+  </div>
+
+  <div class="info">
+   <label>USERNAME</label>
+   <strong>Micheal Tapner</strong>
+  </div>
+
+  <div class="info">
+   <label>ACCOUNT TYPE</label>
+   <strong>Current Account</strong>
+  </div>
+
+  <div class="info">
+   <label>ACCOUNT NUMBER</label>
+   <strong>•••• 4821</strong>
+  </div>
+
+  <div class="info">
+   <label>EMAIL</label>
+   <strong>micheal76@gmail.com</strong>
+  </div>
+
+  <br>
+  <button class="btn primary" onclick="showToast('Profile settings opened.')">
+   Edit profile
+  </button>
+
+ </div>
+</section>
+
+<!-- SETTINGS -->
+<section class="page" id="settings">
+
+ <div class="heading">
+  <h1>Settings</h1>
+  <p>Customize your banking experience.</p>
+ </div>
+
+ <div class="card profile">
+
+  <div class="settings-row">
+   <div>
+    <b>Dark mode</b>
+    <p style="font-size:11px;color:var(--muted)">Change the appearance</p>
+   </div>
+   <button class="switch" id="darkSwitch" onclick="toggleDark()"><i></i></button>
+  </div>
+
+  <div class="settings-row">
+   <div>
+    <b>Notifications</b>
+    <p style="font-size:11px;color:var(--muted)">Receive account alerts</p>
+   </div>
+   <button class="switch on" onclick="this.classList.toggle('on')"><i></i></button>
+  </div>
+
+  <div class="settings-row">
+   <div>
+    <b>Biometric login</b>
+    <p style="font-size:11px;color:var(--muted)">Use device security</p>
+   </div>
+   <button class="switch" onclick="this.classList.toggle('on')"><i></i></button>
+  </div>
+
+ </div>
+</section>
+
+</main>
+</div>
+
+<!-- TRANSFER MODAL -->
+<div class="modal-bg" id="transferModal">
+ <div class="modal">
+  <h2>Transfer money</h2>
+  <p>Create a simulated transfer between accounts.</p>
+
+  <div class="field">
+   <label>RECIPIENT</label>
+   <input id="recipient" placeholder="Recipient name">
+  </div>
+
+  <div class="field">
+   <label>AMOUNT</label>
+   <input id="transferAmount" type="number" min="1" placeholder="0.00">
+  </div>
+
+  <div class="modal-actions">
+   <button class="btn secondary" onclick="closeModal('transferModal')">Cancel</button>
+   <button class="btn primary" onclick="transfer()">Continue</button>
+  </div>
+ </div>
+</div>
+
+<!-- DEPOSIT MODAL -->
+<div class="modal-bg" id="depositModal">
+ <div class="modal">
+  <h2>Add money</h2>
+  <p>Update the simulated account balance.</p>
+
+  <div class="field">
+   <label>AMOUNT</label>
+   <input id="depositAmount" type="number" min="1" placeholder="0.00">
+  </div>
+
+  <div class="modal-actions">
+   <button class="btn secondary" onclick="closeModal('depositModal')">Cancel</button>
+   <button class="btn primary" onclick="deposit()">Add money</button>
+  </div>
+ </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const initialTransactions=[
+ {name:"Salary",date:"05 Oct 2026",amount:3250,type:"income",icon:"↓"},
+ {name:"Tesco",date:"04 Oct 2026",amount:-64.82,type:"expense",icon:"🛒"},
+ {name:"Netflix",date:"02 Oct 2026",amount:-15.99,type:"expense",icon:"▶"},
+ {name:"Transfer received",date:"30 Sep 2026",amount:750,type:"income",icon:"↓"},
+ {name:"Electricity",date:"28 Sep 2026",amount:-92.40,type:"expense",icon:"⚡"}
+];
+
+let transactions=
+ JSON.parse(localStorage.getItem("lydonTransactions"))||initialTransactions;
+
+let balance=
+ Number(localStorage.getItem("lydonBalance"))||12480.75;
+
+function save(){
+ localStorage.setItem("lydonTransactions",JSON.stringify(transactions));
+ localStorage.setItem("lydonBalance",balance);
+}
+
+function money(n){
+ return "£"+Math.abs(n).toLocaleString("en-GB",{minimumFractionDigits:2});
+}
+
+function txHTML(t){
+ return `
+ <div class="transaction">
+  <div class="txleft">
+   <div class="txicon">${t.icon}</div>
+   <div>
+    <div class="txname">${escapeHTML(t.name)}</div>
+    <div class="txdate">${t.date}</div>
+   </div>
+  </div>
+  <strong class="${t.type}">
+   ${t.type==="income"?"+":"-"}${money(t.amount)}
+  </strong>
+ </div>`;
+}
+
+function renderTransactions(){
+
+ let search=(document.getElementById("search")?.value||"").toLowerCase();
+ let filter=document.getElementById("filter")?.value||"all";
+
+ let list=transactions.filter(t=>{
+  let match=t.name.toLowerCase().includes(search);
+  let type=filter==="all"||t.type===filter;
+  return match&&type;
+ });
+
+ document.getElementById("allTransactions").innerHTML=
+ list.length?list.map(txHTML).join(""):
+ `<div class="empty">No transactions found.</div>`;
+
+ document.getElementById("recent").innerHTML=
+ transactions.slice(0,5).map(txHTML).join("");
+
+ let spending=transactions
+  .filter(t=>t.type==="expense")
+  .reduce((a,t)=>a+Math.abs(t.amount),0);
+
+ document.getElementById("spending").textContent=money(spending);
+ document.getElementById("balance").textContent=money(balance);
+}
+
+function showPage(id,btn){
+
+ document.querySelectorAll(".page")
+  .forEach(p=>p.classList.remove("active"));
+
+ document.getElementById(id).classList.add("active");
+
+ if(btn){
+  document.querySelectorAll(".nav")
+   .forEach(n=>n.classList.remove("active"));
+  btn.classList.add("active");
+ }
+
+ closeMenu();
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function toggleMenu(){
+ document.getElementById("sidebar").classList.toggle("open");
+}
+
+function closeMenu(){
+ document.getElementById("sidebar").classList.remove("open");
+}
+
+function openTransfer(){
+ document.getElementById("transferModal").classList.add("show");
+}
+
+function openDeposit(){
+ document.getElementById("depositModal").classList.add("show");
+}
+
+function closeModal(id){
+ document.getElementById(id).classList.remove("show");
+}
+
+function transfer(){
+
+ let recipient=document.getElementById("recipient").value.trim();
+ let amount=Number(document.getElementById("transferAmount").value);
+
+ if(!recipient){
+  showToast("Enter a recipient.");
+  return;
+ }
+
+ if(!amount||amount<=0){
+  showToast("Enter a valid amount.");
+  return;
+ }
+
+ if(amount>balance){
+  showToast("Insufficient demo balance.");
+  return;
+ }
+
+ balance-=amount;
+
+ transactions.unshift({
+  name:"Transfer to "+recipient,
+  date:"05 Oct 2026",
+  amount:-amount,
+  type:"expense",
+  icon:"↗"
+ });
+
+ save();
+ renderTransactions();
+
+ document.getElementById("recipient").value="";
+ document.getElementById("transferAmount").value="";
+
+ closeModal("transferModal");
+ showToast("Transfer added successfully.");
+}
+
+function deposit(){
+
+ let amount=Number(document.getElementById("depositAmount").value);
+
+ if(!amount||amount<=0){
+  showToast("Enter a valid amount.");
+  return;
+ }
+
+ balance+=amount;
+
+ transactions.unshift({
+  name:"Money added",
+  date:"05 Oct 2026",
+  amount:amount,
+  type:"income",
+  icon:"＋"
+ });
+
+ save();
+ renderTransactions();
+
+ document.getElementById("depositAmount").value="";
+ closeModal("depositModal");
+
+ showToast("Balance updated successfully.");
+}
+
+function toggleDark(){
+
+ document.body.classList.toggle("dark");
+
+ let on=document.body.classList.contains("dark");
+ document.getElementById("darkSwitch").classList.toggle("on",on);
+
+ localStorage.setItem("lydonDark",on);
+}
+
+function showToast(message){
+
+ let t=document.getElementById("toast");
+ t.textContent=message;
+ t.classList.add("show");
+
+ setTimeout(()=>t.classList.remove("show"),2600);
+}
+
+function escapeHTML(str){
+ return String(str).replace(/[&<>"']/g,m=>({
+  "&":"&amp;","<":"&lt;",">":"&gt;",
+  '"':"&quot;","'":"&#039;"
+ }[m]));
+}
+
+if(localStorage.getItem("lydonDark")==="true"){
+ document.body.classList.add("dark");
+ document.getElementById("darkSwitch").classList.add("on");
+}
+
+document.querySelectorAll(".modal-bg").forEach(m=>{
+ m.addEventListener("click",e=>{
+  if(e.target===m)m.classList.remove("show");
+ });
+});
+
+renderTransactions();
+</script>
+
+</body>
+</html>
